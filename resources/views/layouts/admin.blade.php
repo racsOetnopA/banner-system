@@ -1,3 +1,6 @@
+
+
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -58,6 +61,20 @@
                 <a href="{{ route('estadisticas.index') }}" class="nav-link text-white px-3 {{ request()->is('estadisticas*') ? 'active' : '' }}">
                     <i class="fas fa-chart-bar me-2"></i>Estadísticas
                 </a>
+
+                {{-- Separador --}}
+                <hr class="my-2 text-secondary opacity-50">
+
+                {{-- Botón de Salir --}}
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="nav-link text-white px-3 border-0 bg-transparent w-100 text-start"
+                        style="cursor:pointer;"
+                        data-bs-toggle="tooltip" title="Cerrar sesión">
+                        <i class="fas fa-sign-out-alt me-2 text-danger"></i> Salir
+                    </button>
+                </form>
             </nav>
         </div>
     </div>
@@ -76,8 +93,14 @@
     </div>
 
     {{-- Footer --}}
-    <footer class="main-footer text-center py-3 bg-white border-top shadow-sm">
-        <small>© {{ date('Y') }} Banner System</small>
+    <footer class="main-footer text-center py-3border-top shadow-sm mt-5" style="background-color: whitesmoke;">
+        <small>
+            <span class="text-muted"> Copyright © <span id="year"></span>
+                    by <a href="https://adclichosting.com/" target="_blank" data-bs-toggle="tooltip" title="{{ Route::currentRouteName() }}" data-bs-placement="top" data-bs-custom-class="tooltip-primary">
+                    <span class="fw-medium text-primary">Adclic Hosting</span>
+                </a> All rights reserved
+            </span>
+        </small>
     </footer>
 
     {{-- JS --}}
