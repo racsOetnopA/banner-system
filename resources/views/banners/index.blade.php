@@ -54,14 +54,15 @@
 
                     {{-- Vista previa dinámica --}}
                     <td class="text-center" style="width:120px;">
+                        <div class="d-flex justify-content-center align-items-center" style="height:50px;">
                         @if($b->type === 'image' && $b->image_path)
                             <img src="{{ Storage::url($b->image_path) }}"
-                                 class="rounded shadow-sm"
+                                 class="rounded shadow-sm d-block"
                                  style="height:50px;max-width:100px;object-fit:cover;"
                                  alt="Imagen del banner">
                         @elseif($b->type === 'video' && $b->video_path)
                             <video src="{{ Storage::url($b->video_path) }}"
-                                   class="rounded shadow-sm"
+                                   class="rounded shadow-sm d-block"
                                    style="height:50px;max-width:100px;object-fit:cover;"
                                    muted
                                    onmouseover="this.play()" onmouseout="this.pause()"></video>
@@ -70,6 +71,7 @@
                         @else
                             <span class="text-muted small">—</span>
                         @endif
+                        </div>
                     </td>
 
                     {{-- Acciones --}}

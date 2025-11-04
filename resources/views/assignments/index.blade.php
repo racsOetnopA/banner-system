@@ -16,7 +16,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Banner</th>
-                    <th>Zona</th>
+                    <th class="text-center">Vista previa</th>
+                    <th class="text-center">Zona</th>
                     <th>Dominio</th>
                     <th>Rotación</th>
                     <th class="text-center">Peso</th>
@@ -31,7 +32,28 @@
                         <i class="fas fa-image text-info me-1"></i>
                         {{ $a->banner->name ?? '—' }}
                     </td>
-                    <td>
+                    {{-- Vista previa del banner asignado --}}
+                    <td class="text-center" style="width:120px;">
+                        <div class="d-flex justify-content-center align-items-center" style="height:50px;">
+                        @if($a->banner && $a->banner->type === 'image' && $a->banner->image_path)
+                            <img src="{{ Storage::url($a->banner->image_path) }}"
+                                 class="rounded shadow-sm d-block"
+                                 style="height:50px;max-width:100px;object-fit:cover;"
+                                 alt="Imagen del banner">
+                        @elseif($a->banner && $a->banner->type === 'video' && $a->banner->video_path)
+                            <video src="{{ Storage::url($a->banner->video_path) }}"
+                                   class="rounded shadow-sm d-block"
+                                   style="height:50px;max-width:100px;object-fit:cover;"
+                                   muted
+                                   onmouseover="this.play()" onmouseout="this.pause()"></video>
+                        @elseif($a->banner && $a->banner->type === 'html')
+                            <span class="text-muted small">[HTML / Script]</span>
+                        @else
+                            <span class="text-muted small">—</span>
+                        @endif
+                        </div>
+                    </td>
+                    <td class="text-center">
                         <i class="fas fa-layer-group text-secondary me-1"></i>
                         {{ $a->zone->name ?? '—' }}
                     </td>
@@ -64,7 +86,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center text-muted py-4">
+                    <td colspan="8" class="text-center text-muted py-4">
                         No hay asignaciones registradas aún.
                     </td>
                 </tr>
