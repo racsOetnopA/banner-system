@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen bg-cover bg-center flex items-center justify-center sm:items-start sm:justify-end p-6 sm:p-12" style="background-image: url('{{ asset('storage/fondo/fonto-banners-2.png') }}');">
+        <div class="min-h-screen bg-cover bg-center flex items-center justify-center sm:items-start sm:justify-end p-6 sm:p-12" style="background-image: url('{{ asset('storage/fondo/fondo-banners-2.png') }}');">
             <div class="w-full sm:max-w-md mx-4 sm:mx-0">
 
                 <div class="w-full px-6 py-4 bg-white bg-opacity-80 shadow-md overflow-hidden sm:rounded-lg">

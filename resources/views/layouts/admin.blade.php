@@ -24,7 +24,7 @@
 </head>
 
 
-<body class="hold-transition">
+<body class="hold-transition" style="background-image: url('{{ asset('storage/fondo/fondo-banners-3.png') }}'); background-size: cover; background-position: center;">
 
     {{-- Navbar superior --}}
     <nav class="navbar navbar-dark bg-dark fixed-top shadow-sm">
@@ -80,7 +80,7 @@
     </div>
 
     {{-- Contenido principal --}}
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="min-height: 85vh">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
