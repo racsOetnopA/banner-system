@@ -72,10 +72,12 @@
 
 
     <div class="col-12 mt-4">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save me-1"></i> Guardar
-        </button>
-        <a href="{{ route('zones.index') }}" class="btn btn-secondary">Cancelar</a>
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save me-1"></i> Guardar
+            </button>
+            <a href="{{ route('zones.index') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
     </div>
 </div>
 

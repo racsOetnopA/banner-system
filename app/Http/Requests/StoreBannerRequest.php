@@ -18,6 +18,9 @@ class StoreBannerRequest extends FormRequest
             'active' => 'boolean',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
+            'zones' => 'required|array|min:1',
+            'zones.*' => 'exists:zones,id',
+            'principal' => 'boolean',
         ];
     }
 

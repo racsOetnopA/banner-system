@@ -4,7 +4,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0"><i class="fas fa-globe me-2"></i> Webs</h1>
-    <a href="{{ route('webs.create') }}" class="btn btn-primary">
+    <a href="{{ route('webs.create') }}" class="btn btn-success">
         <i class="fas fa-plus me-1"></i> Nuevo
     </a>
 </div>

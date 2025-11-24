@@ -16,4 +16,9 @@ class Zone extends Model
     {
         return $this->belongsTo(Web::class);
     }
+
+    public function banners()
+    {
+        return $this->belongsToMany(Banner::class, 'banner_zone')->withTimestamps();
+    }
 }

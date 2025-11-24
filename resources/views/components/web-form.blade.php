@@ -18,8 +18,8 @@
                 @error('site_domain') <div class="text-danger small">{{ $message }}</div> @enderror
             </div>
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-primary">{{ strtoupper($method) === 'POST' ? 'Guardar' : 'Actualizar' }}</button>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-success">{{ strtoupper($method) === 'POST' ? 'Guardar' : 'Actualizar' }}</button>
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">Regresar</a>
             </div>
         </form>

@@ -9,6 +9,10 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebController;
 
+// Serve favicon requests (redirect to svg asset)
+Route::get('/favicon.ico', function() {
+    return redirect(asset('favicon.svg'));
+});
 
 Route::get('/', function () {
     return view('welcome');

@@ -1,10 +1,18 @@
 @extends('layouts.admin')
+
+
+<style>
+.table.table-sm thead tr > th {
+  text-align: center !important;
+}
+</style>
+
 @section('title', 'Banners')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0"><i class="fas fa-image me-2"></i> Banners</h1>
-    <a href="{{ route('banners.create') }}" class="btn btn-primary">
+    <a href="{{ route('banners.create') }}" class="btn btn-success">
         <i class="fas fa-plus me-1"></i> Nuevo
     </a>
 </div>
@@ -18,9 +26,10 @@
                     <th>Nombre</th>
                     <th>Tipo</th>
                     <th>Activo</th>
+                    <th >Zonas</th>
                     <th>Fechas</th>
-                    <th class="text-center">Vista previa</th>
-                    <th class="text-end">Acciones</th>
+                    <th >Vista previa</th>
+                    <th style="text-align: end !important">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +37,7 @@
                 <tr>
                     <td>{{ $b->id }}</td>
                     <td>{{ $b->name }}</td>
-                    <td>
+                    <td class="text-center">
                         @if($b->type === 'image')
                             <span class="badge bg-info"><i class="fas fa-image me-1"></i> Imagen</span>
                         @elseif($b->type === 'video')
@@ -37,12 +46,20 @@
                             <span class="badge bg-warning text-dark"><i class="fas fa-code me-1"></i> HTML</span>
                         @endif
                     </td>
-                    <td>
+                    <td class="text-center">
                         {!! $b->active
                             ? '<span class="badge bg-success">Sí</span>'
                             : '<span class="badge bg-danger">No</span>' !!}
                     </td>
-                    <td>
+                    <td class="text-center">
+                        @if(isset($b->zones_count))
+                            @php $names = $b->zones->pluck('name')->filter()->values()->all(); @endphp
+                            <span class="badge bg-info" data-bs-toggle="tooltip" data-bs-html="false" title="{{ e(implode(', ', $names) ?: 'Sin zonas') }}">{{ $b->zones_count }}</span>
+                        @else
+                            <span class="badge bg-secondary">0</span>
+                        @endif
+                    </td>
+                    <td class="text-center">
                         @if($b->start_date)
                             {{ $b->start_date->format('Y-m-d') }}
                         @endif

@@ -4,7 +4,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0"><i class="fas fa-layer-group me-2"></i> Zonas</h1>
-    <a href="{{ route('zones.create') }}" class="btn btn-primary" data-bs-toggle="tooltip" title="Crear nueva zona">
+    <a href="{{ route('zones.create') }}" class="btn btn-success" data-bs-toggle="tooltip" title="Crear nueva zona">
         <i class="fas fa-plus me-1"></i> Nueva
     </a>
 </div>

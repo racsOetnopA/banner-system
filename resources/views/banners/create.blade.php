@@ -17,7 +17,7 @@
     <div class="card-body">
       <form method="POST" action="{{ route('banners.store') }}" enctype="multipart/form-data">
         @csrf
-        @include('banners.partials.form', ['banner' => null])
+        @include('banners.partials.form', ['banner' => null, 'zones' => $zones])
       </form>
     </div>
   </div>

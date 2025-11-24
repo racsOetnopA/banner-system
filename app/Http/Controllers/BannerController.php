@@ -11,11 +11,14 @@ use Illuminate\Support\Facades\Storage;
 class BannerController extends Controller
 {
     public function index() {
-        $banners = Banner::latest()->paginate(12);
+        $banners = Banner::with('zones')->withCount('zones')->latest()->paginate(12);
         return view('banners.index', compact('banners'));
     }
 
-    public function create() { return view('banners.create'); }
+    public function create() {
+        $zones = \App\Models\Zone::with('web')->orderBy('name')->get();
+        return view('banners.create', compact('zones'));
+    }
 
     public function store(StoreBannerRequest $request) {
         $data = $request->validated();
@@ -31,11 +34,16 @@ class BannerController extends Controller
             $data['video_path'] = $data['image_path'] = null;
         }
 
-        Banner::create($data);
+        $banner = Banner::create($data);
+        // sync zones
+        $banner->zones()->sync($request->input('zones', []));
         return redirect()->route('banners.index')->with('success','Banner creado.');
     }
 
-    public function edit(Banner $banner) { return view('banners.edit', compact('banner')); }
+    public function edit(Banner $banner) {
+        $zones = \App\Models\Zone::with('web')->orderBy('name')->get();
+        return view('banners.edit', compact('banner','zones'));
+    }
 
     public function update(UpdateBannerRequest $request, Banner $banner) {
         $data = $request->validated();
@@ -51,6 +59,7 @@ class BannerController extends Controller
         }
 
         $banner->update($data);
+        $banner->zones()->sync($request->input('zones', []));
         return redirect()->route('banners.index')->with('success','Banner actualizado.');
     }
 

@@ -17,7 +17,7 @@
     <div class="card-body">
       <form method="POST" action="{{ route('banners.update', $banner) }}" enctype="multipart/form-data">
         @csrf @method('PUT')
-        @include('banners.partials.form', ['banner' => $banner])
+        @include('banners.partials.form', ['banner' => $banner, 'zones' => $zones])
       </form>
     </div>
   </div>

@@ -14,3 +14,179 @@
 .action-icon {
 	color: #fff !important;
 }
+
+/* Binance color variables (copied from temporary 'binance' project) */
+:root {
+	--bs-primary: #546dfe;
+	--bs-primary-rgb: 84, 109, 254;
+	--bs-secondary: #d77cf7;
+	--bs-secondary-rgb: 215, 124, 247;
+	--bs-success: #0cd7b1;
+	--bs-success-rgb: 12, 215, 177;
+	--bs-danger: #fe5454;
+	--bs-danger-rgb: 254, 84, 84;
+	--bs-warning: #f4a742;
+	--bs-warning-rgb: 244, 167, 66;
+	--bs-info: #0ca3e7;
+	--bs-info-rgb: 12, 163, 231;
+	--bs-light: #f5f7fa;
+	--bs-dark: #0a0a0a;
+	--bs-orange: #fe7c58;
+	--bs-pink: #fe549b;
+	--bs-teal: #00d8d8;
+	--bs-purple: #7b76fe;
+	--bs-green: #01ef8c;
+	--bs-yellow: #fff621;
+}
+
+/* Choices.js tweaks to better match Bootstrap/Binance theme */
+.choices--bootstrap .choices__inner {
+	min-height: calc(1.5em + .75rem + 2px);
+	padding: .375rem .75rem;
+	border-radius: .375rem;
+	border: 1px solid var(--bs-primary-border, rgba(0,0,0,0.08));
+}
+.choices__list--multiple .choices__item {
+	background: var(--bs-primary);
+	color: #fff;
+	border-radius: .35rem;
+	padding: .15rem .5rem;
+	margin-right: .35rem;
+}
+.choices__list--dropdown {
+	z-index: 2000;
+}
+
+
+/* Override Bootstrap button colors to match Binance palette */
+.btn-primary {
+	background-color: var(--bs-primary) !important;
+	border-color: var(--bs-primary) !important;
+	color: #fff !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+	background-color: rgba(var(--bs-primary-rgb), 0.9) !important;
+	border-color: rgba(var(--bs-primary-rgb), 0.9) !important;
+}
+.btn-secondary {
+	background-color: var(--bs-secondary) !important;
+	border-color: var(--bs-secondary) !important;
+	color: #fff !important;
+}
+.btn-success {
+	background-color: var(--bs-success) !important;
+	border-color: var(--bs-success) !important;
+	color: #fff !important;
+}
+.btn-success:hover, .btn-success:focus {
+	background-color: rgba(var(--bs-success-rgb), 0.9) !important;
+	border-color: rgba(var(--bs-success-rgb), 0.9) !important;
+}
+.btn-danger {
+	background-color: var(--bs-danger) !important;
+	border-color: var(--bs-danger) !important;
+	color: #fff !important;
+}
+.btn-warning {
+	background-color: var(--bs-warning) !important;
+	border-color: var(--bs-warning) !important;
+	color: #212529 !important;
+}
+.btn-info {
+	background-color: var(--bs-info) !important;
+	border-color: var(--bs-info) !important;
+	color: #fff !important;
+}
+.btn-light {
+	background-color: var(--bs-light) !important;
+	border-color: var(--bs-light) !important;
+	color: #212529 !important;
+}
+.btn-dark {
+	background-color: var(--bs-dark) !important;
+	border-color: var(--bs-dark) !important;
+	color: #fff !important;
+}
+
+/* Outline buttons */
+.btn-outline-primary {
+	color: var(--bs-primary) !important;
+	border-color: var(--bs-primary) !important;
+}
+.btn-outline-success {
+	color: var(--bs-success) !important;
+	border-color: var(--bs-success) !important;
+}
+.btn-outline-danger {
+	color: var(--bs-danger) !important;
+	border-color: var(--bs-danger) !important;
+}
+.btn-outline-secondary {
+	color: var(--bs-secondary) !important;
+	border-color: var(--bs-secondary) !important;
+}
+
+
+/* Global color utility overrides to match Binance palette */
+/* Text colors */
+.text-primary { color: var(--bs-primary) !important; }
+.text-secondary { color: var(--bs-secondary) !important; }
+.text-success { color: var(--bs-success) !important; }
+.text-danger { color: var(--bs-danger) !important; }
+.text-warning { color: var(--bs-warning) !important; }
+.text-info { color: var(--bs-info) !important; }
+.text-light { color: var(--bs-light) !important; }
+.text-dark { color: var(--bs-dark) !important; }
+
+/* Backgrounds */
+.bg-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.bg-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.bg-success { background-color: var(--bs-success) !important; color: #fff !important; }
+.bg-danger { background-color: var(--bs-danger) !important; color: #fff !important; }
+.bg-warning { background-color: var(--bs-warning) !important; color: #212529 !important; }
+.bg-info { background-color: var(--bs-info) !important; color: #fff !important; }
+.bg-light { background-color: var(--bs-light) !important; color: #212529 !important; }
+.bg-dark { background-color: var(--bs-dark) !important; color: #fff !important; }
+
+/* Borders */
+.border-primary { border-color: var(--bs-primary) !important; }
+.border-secondary { border-color: var(--bs-secondary) !important; }
+.border-success { border-color: var(--bs-success) !important; }
+.border-danger { border-color: var(--bs-danger) !important; }
+
+/* Badges and alerts */
+.badge-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+.badge-secondary { background-color: var(--bs-secondary) !important; color: #fff !important; }
+.alert-primary { background-color: var(--bs-primary) !important; border-color: var(--bs-primary) !important; color: #fff !important; }
+.alert-success { background-color: var(--bs-success) !important; border-color: var(--bs-success) !important; color: #fff !important; }
+
+/* Links */
+a.text-primary, .link-primary { color: var(--bs-primary) !important; }
+a.text-primary:hover { color: rgba(var(--bs-primary-rgb), .85) !important; }
+
+/* Pagination active state */
+.pagination .page-item.active .page-link,
+.pagination .page-item.active .page-link:focus,
+.pagination .page-item.active .page-link:hover {
+	background-color: var(--bs-primary) !important;
+	border-color: var(--bs-primary) !important;
+	color: #fff !important;
+}
+
+/* Form control focus */
+.form-control:focus {
+	border-color: var(--bs-primary) !important;
+	box-shadow: 0 0 0 .2rem rgba(var(--bs-primary-rgb), .25) !important;
+}
+
+/* Progress bars */
+.progress-bar.bg-primary { background-color: var(--bs-primary) !important; }
+.progress-bar.bg-success { background-color: var(--bs-success) !important; }
+
+/* Table highlight */
+.table-primary { background-color: rgba(var(--bs-primary-rgb), .08) !important; }
+.table-success { background-color: rgba(var(--bs-success-rgb), .08) !important; }
+
+/* Small helpers */
+.bg-primary-transparent { background-color: rgba(var(--bs-primary-rgb), .08) !important; }
+

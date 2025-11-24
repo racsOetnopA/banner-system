@@ -64,7 +64,7 @@
 <body class="hold-transition" style="background-color: #f8f8fa;">
 
 
-    <nav class="navbar navbar-dark fixed-top shadow-sm " style="position: fixed; width:100%; z-index:1030; background-color:#126dc8; color: white; font-size: 18px">
+    <nav class="navbar navbar-dark fixed-top shadow-sm " style="position: fixed; width:100%; z-index:1030; background-color:#566cac; color: white; font-size: 18px">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
                 <a href="{{ route('dashboard') }}" class="nav-link nav-hover px-3 {{ request()->is('/') ? 'active' : '' }}">
@@ -93,7 +93,7 @@
             <div class="d-flex align-items-center ms-auto">
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
-                    <button type="submit" class="btn btn-link nav-link nav-hover px-3 text-black" style="text-decoration:none;">
+                    <button type="submit" class="btn btn-link nav-link nav-hover px-3 text-white" style="text-decoration:none;">
                         <i class="fas fa-sign-out-alt me-2"></i><b>Salir</b>
                     </button>
                 </form>
@@ -126,6 +126,8 @@
     </footer>
 
     {{-- JS --}}
+    <!-- jQuery (required by some plugins like bootstrap-multiselect) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('vendor/admin-lte/js/adminlte.min.js') }}"></script>
 

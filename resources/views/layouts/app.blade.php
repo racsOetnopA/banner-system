@@ -15,6 +15,9 @@
         <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
         <link rel="stylesheet" href="/node_modules/admin-lte/dist/css/adminlte.min.css">
 
+        <!-- Favicon -->
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+
 
         <!-- Scripts -->
         <script src="/node_modules/admin-lte/dist/js/adminlte.min.js"></script>
