@@ -131,6 +131,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('vendor/admin-lte/js/adminlte.min.js') }}"></script>
 
+    <script>
+    // Central tooltip initialization: enables HTML tooltips and zero show delay.
+    document.addEventListener('DOMContentLoaded', () => {
+        const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(el => {
+            try { if (el._tooltip) el._tooltip.dispose(); } catch(e) {}
+            el._tooltip = new bootstrap.Tooltip(el, { html: true, delay: { show: 0, hide: 100 } });
+        });
+    });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

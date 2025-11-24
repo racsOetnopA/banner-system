@@ -190,3 +190,21 @@ a.text-primary:hover { color: rgba(var(--bs-primary-rgb), .85) !important; }
 /* Small helpers */
 .bg-primary-transparent { background-color: rgba(var(--bs-primary-rgb), .08) !important; }
 
+
+/* Global tooltip variants to match badge backgrounds */
+.tooltip-info .tooltip-inner {
+	background-color: var(--bs-info) !important;
+	color: #fff !important;
+	border: none !important;
+}
+.tooltip-secondary .tooltip-inner {
+	background-color: var(--bs-secondary) !important;
+	color: #fff !important;
+	border: none !important;
+}
+.tooltip-primary .tooltip-inner {
+	background-color: var(--bs-primary) !important;
+	color: #fff !important;
+	border: none !important;
+}
+

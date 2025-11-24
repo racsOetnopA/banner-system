@@ -3,7 +3,19 @@
 
 <style>
 .table.table-sm thead tr > th {
-  text-align: center !important;
+    text-align: center !important;
+}
+
+/* Tooltip color variants to match badge backgrounds */
+.tooltip-info .tooltip-inner {
+    background-color: var(--bs-info) !important;
+    color: var(--bs-white, #fff) !important;
+    border: none;
+}
+.tooltip-secondary .tooltip-inner {
+    background-color: var(--bs-secondary) !important;
+    color: var(--bs-white, #fff) !important;
+    border: none;
 }
 </style>
 
@@ -53,10 +65,22 @@
                     </td>
                     <td class="text-center">
                         @if(isset($b->zones_count))
-                            @php $names = $b->zones->pluck('name')->filter()->values()->all(); @endphp
-                            <span class="badge bg-info" data-bs-toggle="tooltip" data-bs-html="false" title="{{ e(implode(', ', $names) ?: 'Sin zonas') }}">{{ $b->zones_count }}</span>
+                            @php
+                                $zoneInfo = $b->zones->map(function($z){
+                                    $site = $z->web->site_domain ?? '—';
+                                    return trim($z->name . ' - ' . $site);
+                                })->filter()->values()->all();
+                                // escape each item but join with <br> for line breaks
+                                $escaped = array_map('e', $zoneInfo);
+                                $tooltipHtml = $escaped ? implode('<br>', $escaped) : 'Sin zonas';
+                            @endphp
+                            <span class="badge bg-info"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-html="true"
+                                  data-bs-custom-class="tooltip-info"
+                                  title="{!! $tooltipHtml !!}">{{ $b->zones_count }}</span>
                         @else
-                            <span class="badge bg-secondary">0</span>
+                            <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-secondary" title="Sin zonas">0</span>
                         @endif
                     </td>
                     <td class="text-center">
@@ -122,3 +146,24 @@
     </div>
 </div>
 @endsection
+
+            @push('scripts')
+            <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Re-initialize tooltips for this page to ensure html:true and custom classes are applied
+                const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(el => {
+                    try {
+                        // Dispose existing tooltip instance if any
+                        if (el._tooltip) {
+                            el._tooltip.dispose();
+                        }
+                    } catch(e) {}
+                    // Create tooltip with html enabled and no show delay
+                    const tip = new bootstrap.Tooltip(el, { html: true, delay: { show: 0, hide: 100 } });
+                    // store reference to allow disposal later
+                    el._tooltip = tip;
+                });
+            });
+            </script>
+            @endpush

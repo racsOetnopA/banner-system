@@ -2,6 +2,11 @@
 @section('title', 'Webs')
 
 @section('content')
+<style>
+/* Tooltip color variants to match badge backgrounds (local override) */
+.tooltip-info .tooltip-inner { background-color: var(--bs-info) !important; color: var(--bs-white, #fff) !important; border: none; }
+.tooltip-secondary .tooltip-inner { background-color: var(--bs-secondary) !important; color: var(--bs-white, #fff) !important; border: none; }
+</style>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0"><i class="fas fa-globe me-2"></i> Webs</h1>
     <a href="{{ route('webs.create') }}" class="btn btn-success">
@@ -27,10 +32,21 @@
                     <td>{{ $w->site_domain }}</td>
                     <td class="text-center">
                         @if(isset($w->zones_count))
-                            @php $names = $w->zones->pluck('name')->filter()->values()->all(); @endphp
-                            <span class="badge bg-info" data-bs-toggle="tooltip" data-bs-html="false" title="{{ e(implode(', ', $names) ?: 'Sin zonas') }}">{{ $w->zones_count }}</span>
+                            @php
+                                $zoneInfo = $w->zones->map(function($z){
+                                    $site = $z->web->site_domain ?? '—';
+                                    return trim($z->name . ' - ' . $site);
+                                })->filter()->values()->all();
+                                $escaped = array_map('e', $zoneInfo);
+                                $tooltipHtml = $escaped ? implode('<br>', $escaped) : 'Sin zonas';
+                            @endphp
+                            <span class="badge bg-info"
+                                  data-bs-custom-class="tooltip-info"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-html="true"
+                                  title="{!! $tooltipHtml !!}">{{ $w->zones_count }}</span>
                         @else
-                            <span class="badge bg-secondary">0</span>
+                            <span class="badge bg-secondary" data-bs-custom-class="tooltip-secondary" data-bs-toggle="tooltip" title="Sin zonas">0</span>
                         @endif
                     </td>
                     <td class="text-end">
@@ -63,8 +79,11 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(el => {
+        try { if (el._tooltip) el._tooltip.dispose(); } catch(e){}
+        el._tooltip = new bootstrap.Tooltip(el, { html: true, delay: { show: 0, hide: 100 } });
+    });
 });
 </script>
 @endpush
