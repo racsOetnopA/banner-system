@@ -7,6 +7,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebController;
 
 
 Route::get('/', function () {
@@ -25,6 +26,7 @@ Route::middleware(['web','auth'])->group(function() {
     Route::resource('banners', BannerController::class);
     Route::resource('zones', ZoneController::class);
     Route::resource('assignments', AssignmentController::class)->parameters(['assignments' => 'assignment']);
+    Route::resource('webs', WebController::class);
     Route::get('/estadisticas', [DashboardController::class, 'index'])->name('estadisticas.index');
 });
 

@@ -21,66 +21,88 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
+    <style>
+        /* Modern hover for top navigation links */
+        .navbar {
+            padding-top: 0.45rem;
+            padding-bottom: 0.45rem;
+        }
+        .navbar .nav-link.nav-hover {
+            position: relative;
+            transition: color .2s ease, transform .15s ease;
+            color: #f8f8fa; /* texto claro para fondo oscuro */
+            padding-bottom: .6rem; /* espacio para la línea sin superposición */
+        }
+        .navbar .nav-link.nav-hover::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -6px; /* colocar la línea por debajo del texto */
+            transform: translateX(-50%) scaleX(0);
+            transform-origin: center;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg,#06b6d4,#6366f1);
+            border-radius: 2px;
+            transition: transform .25s ease;
+        }
+        .navbar .nav-link.nav-hover:hover {
+            color: #ffffff; /* hover claro sobre fondo oscuro */
+            transform: translateY(-2px);
+        }
+        .navbar .nav-link.nav-hover:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+        /* Reduce underline space on small screens */
+        @media (max-width: 576px) {
+            .navbar .nav-link.nav-hover { padding-bottom: .45rem; }
+            .navbar .nav-link.nav-hover::after { bottom: -4px; width: 70%; height: 2px; }
+        }
+    </style>
 </head>
 
+<body class="hold-transition" style="background-color: #f8f8fa;">
 
-<body class="hold-transition" style="background-image: url('{{ asset('storage/fondo/fondo-banners-3.png') }}'); background-size: cover; background-position: center;">
 
-    {{-- Navbar superior --}}
-    <nav class="navbar navbar-dark bg-dark fixed-top shadow-sm">
+    <nav class="navbar navbar-dark fixed-top shadow-sm " style="position: fixed; width:100%; z-index:1030; background-color:#126dc8; color: white; font-size: 18px">
         <div class="container-fluid">
-            <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <span class="navbar-brand mb-0 h1">Panel de Administración</span>
+            <div class="d-flex align-items-center">
+                <a href="{{ route('dashboard') }}" class="nav-link nav-hover px-3 {{ request()->is('/') ? 'active' : '' }}">
+                    <i class="fas fa-home me-2"></i>Inicio
+                </a>
+                <a href="{{ route('webs.index') }}" class="nav-link nav-hover px-3 {{ request()->is('webs*') ? 'active' : '' }}">
+                    <i class="fas fa-globe me-2"></i>Webs
+                </a>
+                <a href="{{ route('zones.index') }}" class="nav-link nav-hover px-3 {{ request()->is('zones*') ? 'active' : '' }}">
+                    <i class="fas fa-layer-group me-2"></i>Zonas
+                </a>
+                <a href="{{ route('banners.index') }}" class="nav-link nav-hover px-3 {{ request()->is('banners*') ? 'active' : '' }}">
+                    <i class="fas fa-image me-2"></i>Banners
+                </a>
+                <a href="{{ route('assignments.index') }}" class="nav-link nav-hover px-3 {{ request()->is('assignments*') ? 'active' : '' }}">
+                    <i class="fas fa-link me-2"></i>Asignaciones
+                </a>
+                <a href="{{ route('estadisticas.index') }}" class="nav-link nav-hover px-3 {{ request()->is('estadisticas*') ? 'active' : '' }}">
+                    <i class="fas fa-chart-bar me-2"></i>Estadísticas
+                </a>
+                <a href="{{ route('webs.index') }}" class="nav-link nav-hover px-3 {{ request()->is('webs*') ? 'active' : '' }}">
+                    <i class="fas fa-globe me-2"></i>Web
+                </a>
+            </div>
+
+            <div class="d-flex align-items-center ms-auto">
+                <form method="POST" action="{{ route('logout') }}" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn btn-link nav-link nav-hover px-3 text-black" style="text-decoration:none;">
+                        <i class="fas fa-sign-out-alt me-2"></i><b>Salir</b>
+                    </button>
+                </form>
+            </div>
         </div>
     </nav>
 
-    {{-- Sidebar offcanvas --}}
-    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title" id="sidebarMenuLabel">Banner System</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                aria-label="Cerrar"></button>
-        </div>
-        <div class="offcanvas-body p-0">
-            <nav class="nav flex-column mt-2">
-                <a href="{{ route('dashboard') }}" class="nav-link text-white px-3 {{ request()->is('/') ? 'active' : '' }}">
-                    <i class="fas fa-home me-2"></i>Inicio
-                </a>
-                <a href="{{ route('banners.index') }}" class="nav-link text-white px-3 {{ request()->is('banners*') ? 'active' : '' }}">
-                    <i class="fas fa-image me-2"></i>Banners
-                </a>
-                <a href="{{ route('zones.index') }}" class="nav-link text-white px-3 {{ request()->is('zones*') ? 'active' : '' }}">
-                    <i class="fas fa-layer-group me-2"></i>Zonas
-                </a>
-                <a href="{{ route('assignments.index') }}" class="nav-link text-white px-3 {{ request()->is('assignments*') ? 'active' : '' }}">
-                    <i class="fas fa-link me-2"></i>Asignaciones
-                </a>
-                <a href="{{ route('estadisticas.index') }}" class="nav-link text-white px-3 {{ request()->is('estadisticas*') ? 'active' : '' }}">
-                    <i class="fas fa-chart-bar me-2"></i>Estadísticas
-                </a>
-
-                {{-- Separador --}}
-                <hr class="my-2 text-secondary opacity-50">
-
-                {{-- Botón de Salir --}}
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                        class="nav-link text-white px-3 border-0 bg-transparent w-100 text-start"
-                        style="cursor:pointer;"
-                        data-bs-toggle="tooltip" title="Cerrar sesión">
-                        <i class="fas fa-sign-out-alt me-2 text-danger"></i> Salir
-                    </button>
-                </form>
-            </nav>
-        </div>
-    </div>
-
     {{-- Contenido principal --}}
-    <div class="content-wrapper" style="min-height: 85vh">
+    <div class="content-wrapper" style="min-height: 85vh; margin-top: 120px;">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}

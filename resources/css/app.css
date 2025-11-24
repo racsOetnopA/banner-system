@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Force edit/action icons to white across the app
+	 Targets common FontAwesome / Bootstrap Icon classes used for edit icons.
+	 Use !important to override other color utilities when necessary. */
+.fa-edit,
+.fas.fa-edit,
+.fa-pen,
+.fa-pencil,
+.bi-pencil,
+.bi-pencil-square,
+.action-icon {
+	color: #fff !important;
+}

@@ -35,9 +35,7 @@
     <div class="form-check">
       <input class="form-check-input" type="checkbox" name="active" value="1" id="active"
              {{ old('active', $banner->active ?? true) ? 'checked' : '' }}>
-      <label class="form-check-label" for="active">
-        <i class="fas fa-toggle-on text-success me-1"></i> Activo
-      </label>
+      <label class="form-check-label" for="active">Activo</label>
     </div>
   </div>
 

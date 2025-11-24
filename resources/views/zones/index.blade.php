@@ -18,7 +18,7 @@
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th class="text-center">Tamaño</th>
-                    <th class="text-center">Principal</th>
+                    <th class="text-center">Sitio</th>
                     <th class="text-end">Acciones</th>
                 </tr>
             </thead>
@@ -38,16 +38,10 @@
                             <span class="text-muted small">Auto</span>
                         @endif
                     </td>
-                    <td class="text-center">
-                        @if($z->principal)
-                            <span class="badge bg-success" data-bs-toggle="tooltip" title="Zona principal"><i class="fas fa-star"></i></span>
-                        @else
-                            <span class="badge bg-secondary">No</span>
-                        @endif
-                    </td>
+                    <td class="text-center">{{ $z->web->site_domain ?? '—' }}</td>
                     <td class="text-end">
                         <a href="{{ route('zones.edit', $z) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar zona">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit text-white"></i>
                         </a>
                         <form action="{{ route('zones.destroy', $z) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta zona?')" data-bs-toggle="tooltip" title="Eliminar zona">

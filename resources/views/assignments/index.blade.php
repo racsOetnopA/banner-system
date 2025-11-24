@@ -73,7 +73,7 @@
                     </td>
                     <td class="text-end">
                         <a href="{{ route('assignments.edit', $a) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar asignación">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit text-white"></i>
                         </a>
                         <form action="{{ route('assignments.destroy', $a) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta asignación?')" data-bs-toggle="tooltip" title="Eliminar asignación">

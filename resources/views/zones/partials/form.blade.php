@@ -3,10 +3,11 @@
     $val = fn($k, $d = '') => old($k, isset($zone) ? $zone->$k : $d);
 @endphp
 
+
 <div class="row g-3">
 
-    {{-- Nombre --}}
-    <div class="col-md-4">
+    {{-- Primera línea: Nombre + Sitio --}}
+    <div class="col-md-8">
         <label class="form-label">
             Nombre de la zona
             <i class="fas fa-info-circle text-muted ms-1" data-bs-toggle="tooltip"
@@ -19,8 +20,21 @@
         @enderror
     </div>
 
-    {{-- Ancho --}}
-    <div class="col-md-3">
+    <div class="col-md-4">
+        <label class="form-label">Sitio</label>
+        <select name="web_id" class="form-select" required>
+            <option value="">-- Seleccionar sitio --</option>
+            @foreach(($webs ?? []) as $w)
+                <option value="{{ $w->id }}" {{ (int) $val('web_id') === $w->id ? 'selected' : '' }}>{{ $w->site_domain }}</option>
+            @endforeach
+        </select>
+        @error('web_id')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
+    </div>
+
+    {{-- Segunda línea: Ancho + Alto --}}
+    <div class="col-md-6">
         <label class="form-label">
             Ancho (px)
             <i class="fas fa-arrows-left-right text-muted ms-1" data-bs-toggle="tooltip"
@@ -32,8 +46,7 @@
         @enderror
     </div>
 
-    {{-- Alto --}}
-    <div class="col-md-3">
+    <div class="col-md-6">
         <label class="form-label">
             Alto (px)
             <i class="fas fa-arrows-up-down text-muted ms-1" data-bs-toggle="tooltip"
@@ -45,19 +58,7 @@
         @enderror
     </div>
 
-    {{-- Principal --}}
-    <div class="col-md-2 d-flex align-items-end">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="principal" value="1" id="principal"
-                {{ old('principal', $zone->principal ?? false) ? 'checked' : '' }}>
-            <label class="form-check-label" for="principal" data-bs-toggle="tooltip"
-                title="Marcar si esta zona es la principal del sitio.">
-                <i class="fas fa-star text-warning me-1"></i> Principal
-            </label>
-        </div>
-    </div>
-
-    {{-- Descripción --}}
+    {{-- Tercera línea: Descripción --}}
     <div class="col-12">
         <label class="form-label">Descripción</label>
         <input type="text" name="description" class="form-control" value="{{ $val('description') }}"
