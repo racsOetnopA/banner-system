@@ -53,20 +53,6 @@
                 <tr>
                     <td>{{ $b->id }}</td>
                     <td>{{ $b->name }}</td>
-                    <td class="text-center">
-                        @if($b->type === 'image')
-                            <span class="badge bg-info"><i class="fas fa-image me-1"></i> Imagen</span>
-                        @elseif($b->type === 'video')
-                            <span class="badge bg-primary"><i class="fas fa-video me-1"></i> Video</span>
-                        @elseif($b->type === 'html')
-                            <span class="badge bg-warning text-dark"><i class="fas fa-code me-1"></i> HTML</span>
-                        @endif
-                    </td>
-                    <td class="text-center">
-                        {!! $b->active
-                            ? '<span class="badge bg-success">Sí</span>'
-                            : '<span class="badge bg-danger">No</span>' !!}
-                    </td>
                     <td class="text-start">
                         @if($b->zones->isNotEmpty())
                             <div class="d-flex flex-column">
@@ -104,6 +90,11 @@
                         @endif
                     </td>
                     <td class="text-center">
+                        {!! $b->active
+                            ? '<span class="badge bg-success">Sí</span>'
+                            : '<span class="badge bg-danger">No</span>' !!}
+                    </td>
+                    <td class="text-center">
                         @if($b->start_date)
                             {{ $b->start_date->format('Y-m-d') }}
                         @endif
@@ -112,7 +103,15 @@
                             {{ $b->end_date->format('Y-m-d') }}
                         @endif
                     </td>
-
+                    <td class="text-center">
+                        @if($b->type === 'image')
+                            <span class="badge bg-info"><i class="fas fa-image me-1"></i> Imagen</span>
+                        @elseif($b->type === 'video')
+                            <span class="badge bg-primary"><i class="fas fa-video me-1"></i> Video</span>
+                        @elseif($b->type === 'html')
+                            <span class="badge bg-warning text-dark"><i class="fas fa-code me-1"></i> HTML</span>
+                        @endif
+                    </td>
                     {{-- Vista previa dinámica --}}
                     <td class="text-center" style="width:120px;">
                         <div class="d-flex justify-content-center align-items-center" style="height:50px;">
