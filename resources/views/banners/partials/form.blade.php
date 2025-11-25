@@ -44,8 +44,14 @@
                 </div>
                 <div class="mt-2 d-flex gap-3">
                     <div class="form-check">
+                        @php
+                            $isPrincipalDefault = false;
+                            if (isset($banner)) {
+                                $isPrincipalDefault = $banner->zones->filter(function($z){ return ($z->pivot->principal ?? false); })->isNotEmpty();
+                            }
+                        @endphp
                         <input class="form-check-input" type="checkbox" name="principal" value="1" id="principal"
-                            {{ old('principal', $banner->principal ?? false) ? 'checked' : '' }}>
+                            {{ old('principal', $isPrincipalDefault) ? 'checked' : '' }}>
                         <label class="form-check-label" for="principal">Principal</label>
                     </div>
                 </div>
@@ -154,15 +160,24 @@
                 <div id="zones_list">
                     @foreach ($zones as $z)
                         @php $checked = in_array($z->id, old('zones', isset($banner) ? $banner->zones->pluck('id')->toArray() : [])); @endphp
-                        <div class="form-check">
-                            <input class="form-check-input zone-checkbox" type="checkbox"
-                                value="{{ $z->id }}" id="zone_{{ $z->id }}" name="zones[]"
-                                {{ $checked ? 'checked' : '' }}>
-                            <label class="form-check-label" for="zone_{{ $z->id }}">{{ $z->name }}
-                                @if ($z->web)
-                                    - <small class="text-muted">{{ $z->web->site_domain }}</small>
-                                @endif
-                            </label>
+                        <div class="form-check d-flex align-items-start justify-content-between" style="gap:10px;">
+                            <div>
+                                <input class="form-check-input zone-checkbox" type="checkbox"
+                                    value="{{ $z->id }}" id="zone_{{ $z->id }}" name="zones[]"
+                                    {{ $checked ? 'checked' : '' }}>
+                                <label class="form-check-label ms-2" for="zone_{{ $z->id }}">
+                                    {{ $z->name }}
+                                    @if($z->width || $z->height)
+                                        - <small class="text-muted">{{ $z->width }}x{{ $z->height }}</small>
+                                    @endif
+                                    @if ($z->web)
+                                        - <small class="text-muted">{{ $z->web->site_domain }}</small>
+                                    @endif
+                                </label>
+                            </div>
+                            <div>
+                                <small id="zone_warning_{{ $z->id }}" class="text-danger pe-2" style="display:none;">(Banner principal se actualizará)</small>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -196,6 +211,11 @@
             const videoField = document.querySelector('input[name="video"]');
             const htmlField = document.querySelector('textarea[name="html_code"]');
 
+            // Flags indicating existing stored content (used to avoid forcing upload on edit)
+            const hasImage = @json(isset($banner) && $banner->image_path ? true : false);
+            const hasVideo = @json(isset($banner) && $banner->video_path ? true : false);
+            const hasHtml = @json(isset($banner) && $banner->html_code ? true : false);
+
             function toggleFields() {
                 const t = typeSelect.value;
 
@@ -204,10 +224,11 @@
                 document.querySelector('.type-video').style.display = (t === 'video') ? '' : 'none';
                 document.querySelector('.type-html').style.display = (t === 'html') ? '' : 'none';
 
-                // Activar/desactivar 'required' según tipo
-                if (imageField) imageField.required = (t === 'image');
-                if (videoField) videoField.required = (t === 'video');
-                if (htmlField) htmlField.required = (t === 'html');
+                // Activar/desactivar 'required' según tipo.
+                // On edit, if there is already stored content for the selected type, don't force upload/entry.
+                if (imageField) imageField.required = (t === 'image' && !hasImage);
+                if (videoField) videoField.required = (t === 'video' && !hasVideo);
+                if (htmlField) htmlField.required = (t === 'html' && !hasHtml);
             }
 
             // Inicializar tooltips
@@ -216,6 +237,37 @@
 
             typeSelect.addEventListener('change', toggleFields);
             toggleFields();
+        });
+    </script>
+@endpush
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const principalChk = document.getElementById('principal');
+            const list = document.getElementById('zones_list');
+            // Zones that already have an active principal banner (passed from controller)
+            const zonesWithPrincipal = @json($zonesWithPrincipal ?? []);
+
+            function updateWarnings() {
+                const principalOn = principalChk ? principalChk.checked : false;
+                list.querySelectorAll('.zone-checkbox').forEach(chk => {
+                    const zId = parseInt(chk.value, 10);
+                    const warn = document.getElementById('zone_warning_' + zId);
+                    if (warn) {
+                        if (principalOn && chk.checked && zonesWithPrincipal.includes(zId)) {
+                            warn.style.display = 'inline';
+                        } else {
+                            warn.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            if (principalChk) principalChk.addEventListener('change', updateWarnings);
+            list.querySelectorAll('.zone-checkbox').forEach(chk => chk.addEventListener('change', updateWarnings));
+            // initial
+            updateWarnings();
         });
     </script>
 @endpush

@@ -15,7 +15,7 @@
                 <select id="zone_select" class="form-select">
                     <option value="">-- Selecciona zona --</option>
                     @foreach($zones as $z)
-                        <option value="{{ $z->id }}" data-site="{{ $z->web->site_domain ?? '' }}">{{ $z->name }} @if($z->web) - {{ $z->web->site_domain }}@endif</option>
+                        <option value="{{ $z->id }}" data-site="{{ $z->web->site_domain ?? '' }}">{{ $z->name }}@if($z->width || $z->height) - {{ $z->width }}x{{ $z->height }}@endif @if($z->web) - {{ $z->web->site_domain }}@endif</option>
                     @endforeach
                 </select>
             </div>

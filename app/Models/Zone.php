@@ -19,7 +19,7 @@ class Zone extends Model
 
     public function banners()
     {
-        return $this->belongsToMany(Banner::class, 'banner_zone')->withTimestamps();
+        return $this->belongsToMany(Banner::class, 'banner_zone')->withPivot('principal')->withTimestamps();
     }
 
     /**
@@ -35,28 +35,24 @@ class Zone extends Model
     {
         $now = now();
 
-        $base = function () use ($now) {
-            return Banner::query()
-                ->where('active', true)
-                ->where(function ($q) use ($now) {
-                    $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
-                })
-                ->where(function ($q) use ($now) {
-                    $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
-                });
-        };
+        // Start from the relation so pivot data is loaded (including `principal`)
+        $baseQuery = $this->banners()->where('active', true)
+            ->where(function ($q) use ($now) {
+                $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
+            })
+            ->where(function ($q) use ($now) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
+            });
 
-        // Banners principales asociados a esta zona
-        $principal = $base()
-            ->where('principal', true)
-            ->whereHas('zones', function ($q) { $q->where('zones.id', $this->id); })
-            ->orderBy('created_at', 'desc')
+        // Principals for this zone (via pivot)
+        $principal = (clone $baseQuery)
+            ->where('banner_zone.principal', true)
+            ->orderBy('banners.created_at', 'desc')
             ->get();
 
-        // Banners no principales asociados a esta zona (aleatorio)
-        $others = $base()
-            ->where(function ($q) { $q->where('principal', false)->orWhereNull('principal'); })
-            ->whereHas('zones', function ($q) { $q->where('zones.id', $this->id); })
+        // Others (non-principal)
+        $others = (clone $baseQuery)
+            ->where(function ($q) { $q->whereNull('banner_zone.principal')->orWhere('banner_zone.principal', false); })
             ->inRandomOrder()
             ->get();
 

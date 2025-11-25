@@ -11,9 +11,10 @@ class UpdateBannerRequest extends FormRequest
         return [
             'name' => 'required|string|max:150',
             'type' => 'required|in:image,html,video',
-            'image' => 'nullable|required_if:type,image|image|max:4096',
-            'video' => 'nullable|required_if:type,video|mimes:mp4,webm,ogg|max:51200', // 50MB
-            'html_code' => 'nullable|required_if:type,html|string',
+            // On update we don't force uploading a new file — validate only if provided
+            'image' => 'nullable|image|max:4096',
+            'video' => 'nullable|mimes:mp4,webm,ogg|max:51200', // 50MB
+            'html_code' => 'nullable|string',
             'link_url' => 'nullable|url',
             'active' => 'boolean',
             'start_date' => 'nullable|date',

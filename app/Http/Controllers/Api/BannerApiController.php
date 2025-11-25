@@ -34,8 +34,8 @@ class BannerApiController extends Controller
         }
 
         // Separar principales y el resto
-        $principals = $banners->filter(fn($b) => (bool) ($b->principal ?? false));
-        $others = $banners->filter(fn($b) => ! (bool) ($b->principal ?? false));
+        $principals = $banners->filter(fn($b) => (bool) ($b->pivot->principal ?? false));
+        $others = $banners->filter(fn($b) => ! (bool) ($b->pivot->principal ?? false));
 
         $session = session();
         $sessionId = $session->getId() ?? request()->ip();

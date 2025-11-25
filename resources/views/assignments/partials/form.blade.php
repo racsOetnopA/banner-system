@@ -22,7 +22,9 @@
     <select name="zone_id" class="form-select" required data-bs-toggle="tooltip" title="Selecciona la zona donde aparecerá el banner">
       <option value="">-- Selecciona --</option>
       @foreach($zones as $z)
-        <option value="{{ $z->id }}" {{ (int)$val('zone_id')===$z->id ? 'selected':'' }}>{{ $z->name }}</option>
+        <option value="{{ $z->id }}" data-zone-name="{{ $z->name }}" data-site="{{ $z->web->site_domain ?? '' }}" {{ (int)$val('zone_id')===$z->id ? 'selected':'' }}>
+          {{ $z->name }}@if($z->width || $z->height) - {{ $z->width }}x{{ $z->height }}@endif @if($z->web) - {{ $z->web->site_domain }}@endif
+        </option>
       @endforeach
     </select>
     @error('zone_id')<small class="text-danger">{{ $message }}</small>@enderror
@@ -118,9 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateCode() {
-    const zoneText = zoneSelect ? zoneSelect.options[zoneSelect.selectedIndex]?.text : '';
+    const opt = zoneSelect ? zoneSelect.options[zoneSelect.selectedIndex] : null;
+    const zoneName = opt ? (opt.dataset.zoneName || opt.text.split(' - ')[0].trim()) : '';
     const siteDomain = siteInput?.value.trim();
-    embed.value = (zoneText && siteDomain) ? buildSnippet(zoneText, siteDomain) : '';
+    embed.value = (zoneName && siteDomain) ? buildSnippet(zoneName, siteDomain) : '';
   }
 
   // Copiar

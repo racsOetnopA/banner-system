@@ -4,8 +4,8 @@
 @section('content')
 <style>
 /* Tooltip color variants to match badge backgrounds (local override) */
-.tooltip-info .tooltip-inner { background-color: var(--bs-info) !important; color: var(--bs-white, #fff) !important; border: none; }
-.tooltip-secondary .tooltip-inner { background-color: var(--bs-secondary) !important; color: var(--bs-white, #fff) !important; border: none; }
+.tooltip-info .tooltip-inner { background-color: var(--bs-info) !important; color: var(--bs-white, #fff) !important; border: none; max-width: 90vw; white-space: nowrap; }
+.tooltip-secondary .tooltip-inner { background-color: var(--bs-secondary) !important; color: var(--bs-white, #fff) !important; border: none; max-width: 90vw; white-space: nowrap; }
 </style>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0"><i class="fas fa-globe me-2"></i> Webs</h1>
@@ -35,7 +35,11 @@
                             @php
                                 $zoneInfo = $w->zones->map(function($z){
                                     $site = $z->web->site_domain ?? '—';
-                                    return trim($z->name . ' - ' . $site);
+                                        $size = (!is_null($z->width) || !is_null($z->height)) ? trim(($z->width ?? '') . 'x' . ($z->height ?? '')) : null;
+                                    $parts = [$z->name];
+                                    if ($size) $parts[] = $size;
+                                    if ($site) $parts[] = $site;
+                                    return trim(implode(' - ', $parts));
                                 })->filter()->values()->all();
                                 $escaped = array_map('e', $zoneInfo);
                                 $tooltipHtml = $escaped ? implode('<br>', $escaped) : 'Sin zonas';

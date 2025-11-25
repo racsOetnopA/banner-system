@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Panel de Administración')</title>
 
     {{-- CSS AdminLTE + Bootstrap --}}
@@ -63,6 +64,12 @@
         @media (max-width: 576px) {
             .navbar .nav-link.nav-hover { padding-bottom: .45rem; }
             .navbar .nav-link.nav-hover::after { bottom: -4px; width: 70%; height: 2px; }
+        }
+        /* Global tooltip sizing: expand to fit longest line (capped) and avoid wrapping lines */
+        .tooltip-inner {
+            max-width: 90vw !important;
+            white-space: nowrap !important;
+            overflow: auto;
         }
     </style>
 </head>
