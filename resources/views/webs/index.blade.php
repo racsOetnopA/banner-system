@@ -77,12 +77,21 @@
                         <a href="{{ route('webs.edit', $w) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-warning" title="Editar">
                             <i class="fas fa-edit text-white"></i>
                         </a>
-                        <form action="{{ route('webs.destroy', $w) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar este sitio?')">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger" type="submit" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        @if($w->zones && $w->zones->isNotEmpty())
+                            <form action="{{ route('webs.forceDestroy', $w) }}" method="POST" class="d-inline" onsubmit="return confirm('Esta web tiene zonas y puede contener banners. ¿Eliminar también las zonas y relaciones? Esta acción no se puede deshacer.')">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger" type="submit" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Eliminar (forzar)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('webs.destroy', $w) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar este sitio?')">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger" type="submit" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

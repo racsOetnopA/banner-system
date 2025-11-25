@@ -33,6 +33,8 @@ Route::middleware(['web','auth'])->group(function() {
     Route::resource('zones', ZoneController::class);
     Route::resource('assignments', AssignmentController::class)->parameters(['assignments' => 'assignment']);
     Route::resource('webs', WebController::class);
+    // Force delete route: deletes zones and banner-zone pivots before removing the web.
+    Route::delete('webs/{web}/force', [WebController::class, 'forceDestroy'])->name('webs.forceDestroy');
     Route::get('/estadisticas', [DashboardController::class, 'index'])->name('estadisticas.index');
     Route::get('/estadisticas/zone-stats', [DashboardController::class, 'zoneStats'])->name('estadisticas.zone_stats');
     Route::get('/estadisticas/series', [DashboardController::class, 'series'])->name('estadisticas.series');
