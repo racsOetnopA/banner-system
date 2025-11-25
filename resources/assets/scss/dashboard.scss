@@ -1,0 +1,5 @@
+// Main entry for dashboard styles
+@charset "utf-8";
+// Use the module system instead of deprecated @import
+@use "variables" as *;
+@use "custom/_dashboard_styles" as *;

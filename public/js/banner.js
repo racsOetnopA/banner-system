@@ -15,17 +15,18 @@
       // Insertar HTML del banner
       container.innerHTML = data.html;
 
-      // Registrar la vista en el backend
-      fetch(`${BASE_URL}/api/track/view`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          banner_id: data.id,
-          assignment_id: data.assignment_id ?? null,
-          zone: zone,
-          site: site
-        })
-      });
+      // Registrar la vista en el backend (usar endpoint GET existente)
+      // Solo si el servidor no indicó que el banner ya hace su propio tracking
+      try {
+        const assignmentParam = data.assignment_id ? `&assignment=${encodeURIComponent(data.assignment_id)}` : '';
+        const shouldSkip = data.view_tracked === true;
+        if (!shouldSkip) {
+          fetch(`${BASE_URL}/api/track/view/${data.id}?zone=${encodeURIComponent(zone)}&site=${encodeURIComponent(site)}${assignmentParam}`)
+            .catch(() => {});
+        }
+      } catch (e) {
+        // silenciar errores de tracking
+      }
     })
     .catch(err => console.error('Error cargando banner:', err));
 })();

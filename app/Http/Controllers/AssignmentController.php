@@ -11,7 +11,8 @@ class AssignmentController extends Controller
 {
     public function index(){
         $assignments = Assignment::with(['banner','zone'])->latest()->paginate(15);
-        return view('assignments.index', compact('assignments'));
+        $zones = Zone::with('web')->orderBy('name')->get();
+        return view('assignments.index', compact('assignments','zones'));
     }
 
     public function create(){

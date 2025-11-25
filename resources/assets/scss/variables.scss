@@ -1,0 +1,41 @@
+// Map SCSS variables to CSS custom properties (fall back to sensible defaults)
+$primary: var(--bs-primary, #546dfe);
+$primary-rgb: var(--bs-primary-rgb, 84,109,254);
+$secondary: var(--bs-secondary, #d77cf7);
+$secondary-rgb: var(--bs-secondary-rgb, 215,124,247);
+$success: var(--bs-success, #0cd7b1);
+$success-rgb: var(--bs-success-rgb, 12,215,177);
+$danger: var(--bs-danger, #fe5454);
+$warning: var(--bs-warning, #f4a742);
+$info: var(--bs-info, #0ca3e7);
+$default-border: var(--bs-light, #e9ecef);
+$default-text-color: var(--bs-dark, #0a0a0a);
+$custom-white: #ffffff;
+
+// Derived tints (provide simple fallbacks)
+$primary-01: rgba(var(--bs-primary-rgb, 84,109,254), 0.1);
+$primary-03: rgba(var(--bs-primary-rgb, 84,109,254), 0.3);
+$primary-05: rgba(var(--bs-primary-rgb, 84,109,254), 0.5);
+$primary-08: rgba(var(--bs-primary-rgb, 84,109,254), 0.8);
+$primary-09: rgba(var(--bs-primary-rgb, 84,109,254), 0.95);
+
+// Ensure other color aliases exist
+$orange: var(--bs-orange, #fe7c58);
+$light: var(--bs-light, #f5f7fa);
+$dark: var(--bs-dark, #0a0a0a);
+$warning-rgb: var(--bs-warning-rgb, 244,167,66);
+$info-rgb: var(--bs-info-rgb, 12,163,231);
+$success-rgb: var(--bs-success-rgb, 12,215,177);
+$secondary-rgb: var(--bs-secondary-rgb, 215,124,247);
+$danger-rgb: var(--bs-danger-rgb, 254,84,84);
+
+// Common aliases
+$white: var(--bs-white, #ffffff);
+$black: var(--bs-black, #000000);
+
+// Gray scale aliases (level 3 used in the SCSS)
+$gray-3: var(--bs-gray-3, #dee2e6);
+
+// Additional palette colors used by the SCSS
+$pink: var(--bs-pink, #ff6bcb);
+$indigo: var(--bs-indigo, #6610f2);

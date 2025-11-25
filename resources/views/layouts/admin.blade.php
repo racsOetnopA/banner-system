@@ -18,7 +18,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     {{-- 💡 Importante: esta línea inyecta el cliente de Vite --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite([
+        // 'resources/css/app.css',
+        'resources/assets/css/styles.css',
+        'resources/js/app.js',
+        // Dashboard SCSS (requires `sass` devDependency installed)
+        'resources/assets/scss/dashboard.scss'
+    ])
 
     @stack('styles')
     <style>
@@ -80,13 +86,10 @@
                     <i class="fas fa-image me-2"></i>Banners
                 </a>
                 <a href="{{ route('assignments.index') }}" class="nav-link nav-hover px-3 {{ request()->is('assignments*') ? 'active' : '' }}">
-                    <i class="fas fa-link me-2"></i>Asignaciones
+                    <i class="fas fa-link me-2"></i>Código
                 </a>
                 <a href="{{ route('estadisticas.index') }}" class="nav-link nav-hover px-3 {{ request()->is('estadisticas*') ? 'active' : '' }}">
                     <i class="fas fa-chart-bar me-2"></i>Estadísticas
-                </a>
-                <a href="{{ route('webs.index') }}" class="nav-link nav-hover px-3 {{ request()->is('webs*') ? 'active' : '' }}">
-                    <i class="fas fa-globe me-2"></i>Web
                 </a>
             </div>
 
@@ -102,7 +105,7 @@
     </nav>
 
     {{-- Contenido principal --}}
-    <div class="content-wrapper" style="min-height: 85vh; margin-top: 120px;">
+    <div class="content-wrapper" style="min-height: 85vh; margin-top: 20px;">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -113,6 +116,19 @@
             @yield('content')
         </div>
     </div>
+
+    {{-- <div class="text-centert w-50">
+        Aquí el banner
+        <br>
+        <div id="zone-10x10"></div>
+        <script>
+        (function(){
+        var s=document.createElement('script');
+        s.src='http://banner-system.test/js/banner.js?zone=10x10&site=banner-system.test';
+        document.currentScript.parentNode.appendChild(s);
+        })();
+        </script>
+    </div> --}}
 
     {{-- Footer --}}
     <footer class="main-footer text-center py-3border-top shadow-sm mt-5" style="background-color: whitesmoke;">

@@ -37,6 +37,22 @@
 	--bs-purple: #7b76fe;
 	--bs-green: #01ef8c;
 	--bs-yellow: #fff621;
+
+	/* RGB aliases used by legacy / dashboard SCSS (kept for compatibility) */
+	--body-bg-rgb: 248, 248, 250;
+	--primary-rgb: 84, 109, 254;
+	--secondary-rgb: 215, 124, 247;
+	--warning-rgb: 244, 167, 66;
+	--info-rgb: 12, 163, 231;
+	--success-rgb: 12, 215, 177;
+	--danger-rgb: 254, 84, 84;
+	--light-rgb: 245, 247, 250;
+	--dark-rgb: 10, 10, 10;
+	--orange-rgb: 254, 124, 88;
+	--pink-rgb: 254, 84, 155;
+	--teal-rgb: 0, 216, 216;
+	--purple-rgb: 123, 118, 254;
+	--green-rgb: 1, 239, 140;
 }
 
 /* Choices.js tweaks to better match Bootstrap/Binance theme */
