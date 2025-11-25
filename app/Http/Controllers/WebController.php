@@ -9,8 +9,11 @@ class WebController extends Controller
 {
     public function index()
     {
-        // Incluir width/height al cargar zonas para poder mostrarlas en tooltips
-        $webs = Web::with(['zones' => function($q){ $q->select('id','name','web_id','width','height'); }])->withCount('zones')->latest()->paginate(15);
+                // Cargar todas las zonas y eager-load de banners (id, name, active)
+                $webs = Web::with(['zones' => function($q){
+                        $q->select('id','name','web_id','width','height')
+                            ->with(['banners' => function($qb){ $qb->select('banners.id','banners.name','banners.active'); }]);
+                }])->withCount('zones')->latest()->paginate(15);
         return view('webs.index', compact('webs'));
     }
 

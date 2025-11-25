@@ -38,14 +38,35 @@
                             <div class="d-flex flex-column">
                                 @foreach($w->zones as $z)
                                     @php
-                                        $site = $z->web->site_domain ?? '—';
                                         $size = (!is_null($z->width) || !is_null($z->height)) ? trim(($z->width ?? '') . 'x' . ($z->height ?? '')) : null;
-                                        $parts = [$z->name];
-                                        if ($size) $parts[] = $size;
-                                        if ($site) $parts[] = $site;
-                                        $label = trim(implode(' - ', $parts));
                                     @endphp
-                                    <small class="text-muted">{{ $label }}</small>
+                                    <div class="mb-1">
+                                        <small class="">
+                                            {{-- Zona: Nombre - Tamaño --}}
+                                            {{ $z->name }}@if($size) - {{ $size }}@endif
+                                        </small>
+                                        @if($z->banners && $z->banners->isNotEmpty())
+                                            <div class="mb-1 ms-4">
+                                                @foreach($z->banners as $b)
+                                                    <small class="d-block">
+                                                        <span class="text-muted">Banner: </span>
+                                                        <strong>{{ $b->name }}</strong>
+                                                        @if($b->active)
+                                                            <span class="ms-2" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-success" title="Activo">
+                                                                <i class="fas fa-star text-success"></i>
+                                                            </span>
+                                                        @else
+                                                            <span class="ms-2" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Inactivo">
+                                                                <i class="fas fa-star text-danger"></i>
+                                                            </span>
+                                                        @endif
+                                                    </small>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <div class="mt-1"><small class="text-muted">Sin Banner</small></div>
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
                         @else
