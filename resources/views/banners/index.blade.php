@@ -21,6 +21,21 @@
     max-width: 90vw;
     white-space: nowrap;
 }
+/* Primary and warning tooltip variants to match badge colors */
+.tooltip-primary .tooltip-inner {
+    background-color: var(--bs-primary) !important;
+    color: var(--bs-white, #fff) !important;
+    border: none;
+    max-width: 90vw;
+    white-space: nowrap;
+}
+.tooltip-warning .tooltip-inner {
+    background-color: var(--bs-warning) !important;
+    color: var(--bs-dark, #000) !important;
+    border: none;
+    max-width: 90vw;
+    white-space: nowrap;
+}
 </style>
 
 @section('title', 'Banners')
@@ -105,27 +120,46 @@
                     </td>
                     <td class="text-center">
                         @if($b->type === 'image')
-                            <span class="badge bg-info"><i class="fas fa-image me-1"></i> Imagen</span>
+                            <span class="badge bg-info"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-custom-class="tooltip-info"
+                                  title="Imagen">
+                                <i class="fas fa-image"></i>
+                            </span>
                         @elseif($b->type === 'video')
-                            <span class="badge bg-primary"><i class="fas fa-video me-1"></i> Video</span>
+                            <span class="badge bg-primary"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-custom-class="tooltip-primary"
+                                  title="Video">
+                                <i class="fas fa-video"></i>
+                            </span>
                         @elseif($b->type === 'html')
-                            <span class="badge bg-warning text-dark"><i class="fas fa-code me-1"></i> HTML</span>
+                            <span class="badge bg-warning text-dark"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-custom-class="tooltip-warning"
+                                  title="HTML / Script">
+                                <i class="fas fa-code"></i>
+                            </span>
                         @endif
                     </td>
                     {{-- Vista previa dinámica --}}
                     <td class="text-center" style="width:120px;">
                         <div class="d-flex justify-content-center align-items-center" style="height:50px;">
                         @if($b->type === 'image' && $b->image_path)
-                            <img src="{{ Storage::url($b->image_path) }}"
-                                 class="rounded shadow-sm d-block"
-                                 style="height:50px;max-width:100px;object-fit:cover;"
-                                 alt="Imagen del banner">
+                            <a href="{{ Storage::url($b->image_path) }}" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ Storage::url($b->image_path) }}"
+                                     class="rounded shadow-sm d-block"
+                                     style="height:50px;max-width:100px;object-fit:cover;"
+                                     alt="Imagen del banner">
+                            </a>
                         @elseif($b->type === 'video' && $b->video_path)
-                            <video src="{{ Storage::url($b->video_path) }}"
-                                   class="rounded shadow-sm d-block"
-                                   style="height:50px;max-width:100px;object-fit:cover;"
-                                   muted
-                                   onmouseover="this.play()" onmouseout="this.pause()"></video>
+                            <a href="{{ Storage::url($b->video_path) }}" target="_blank" rel="noopener noreferrer">
+                                <video src="{{ Storage::url($b->video_path) }}"
+                                       class="rounded shadow-sm d-block"
+                                       style="height:50px;max-width:100px;object-fit:cover;"
+                                       muted
+                                       onmouseover="this.play()" onmouseout="this.pause()"></video>
+                            </a>
                         @elseif($b->type === 'html')
                             <span class="text-muted small">[HTML / Script]</span>
                         @else

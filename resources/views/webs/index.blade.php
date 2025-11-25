@@ -30,36 +30,32 @@
                 <tr>
                     <td>{{ $w->id }}</td>
                     <td>{{ $w->site_domain }}</td>
-                    <td class="text-center">
-                        @if(isset($w->zones_count))
-                            @php
-                                $zoneInfo = $w->zones->map(function($z){
-                                    $site = $z->web->site_domain ?? '—';
+                    <td class="text-start">
+                        @if($w->zones && $w->zones->isNotEmpty())
+                            <div class="d-flex flex-column">
+                                @foreach($w->zones as $z)
+                                    @php
+                                        $site = $z->web->site_domain ?? '—';
                                         $size = (!is_null($z->width) || !is_null($z->height)) ? trim(($z->width ?? '') . 'x' . ($z->height ?? '')) : null;
-                                    $parts = [$z->name];
-                                    if ($size) $parts[] = $size;
-                                    if ($site) $parts[] = $site;
-                                    return trim(implode(' - ', $parts));
-                                })->filter()->values()->all();
-                                $escaped = array_map('e', $zoneInfo);
-                                $tooltipHtml = $escaped ? implode('<br>', $escaped) : 'Sin zonas';
-                            @endphp
-                            <span class="badge bg-info"
-                                  data-bs-custom-class="tooltip-info"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-html="true"
-                                  title="{!! $tooltipHtml !!}">{{ $w->zones_count }}</span>
+                                        $parts = [$z->name];
+                                        if ($size) $parts[] = $size;
+                                        if ($site) $parts[] = $site;
+                                        $label = trim(implode(' - ', $parts));
+                                    @endphp
+                                    <small class="text-muted">{{ $label }}</small>
+                                @endforeach
+                            </div>
                         @else
-                            <span class="badge bg-secondary" data-bs-custom-class="tooltip-secondary" data-bs-toggle="tooltip" title="Sin zonas">0</span>
+                            <small class="text-muted">Sin zonas</small>
                         @endif
                     </td>
                     <td class="text-end">
-                        <a href="{{ route('webs.edit', $w) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar web">
+                        <a href="{{ route('webs.edit', $w) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-warning" title="Editar">
                             <i class="fas fa-edit text-white"></i>
                         </a>
                         <form action="{{ route('webs.destroy', $w) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar este sitio?')">
                             @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">
+                            <button class="btn btn-sm btn-danger" type="submit" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Eliminar">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>

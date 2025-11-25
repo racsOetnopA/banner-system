@@ -71,6 +71,26 @@
             white-space: nowrap !important;
             overflow: auto;
         }
+        /* Make all table header cells bold globally and set color */
+        table thead th, table th {
+            font-weight: 700 !important;
+            color: #65686a !important;
+        }
+        /* Tooltip variants for warning and danger */
+        .tooltip-warning .tooltip-inner {
+            background-color: var(--bs-warning) !important;
+            color: var(--bs-dark, #000) !important;
+            border: none;
+            max-width: 90vw;
+            white-space: nowrap;
+        }
+        .tooltip-danger .tooltip-inner {
+            background-color: var(--bs-danger) !important;
+            color: var(--bs-white, #fff) !important;
+            border: none;
+            max-width: 90vw;
+            white-space: nowrap;
+        }
     </style>
 </head>
 

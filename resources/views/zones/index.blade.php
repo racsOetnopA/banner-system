@@ -40,13 +40,13 @@
                     </td>
                     <td class="text-center">{{ $z->web->site_domain ?? '—' }}</td>
                     <td class="text-end">
-                        <a href="{{ route('zones.edit', $z) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar zona">
+                        <a href="{{ route('zones.edit', $z) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-warning" title="Editar">
                             <i class="fas fa-edit text-white"></i>
                         </a>
                         <form action="{{ route('zones.destroy', $z) }}" method="POST" class="d-inline"
-                              onsubmit="return confirm('¿Eliminar esta zona?')" data-bs-toggle="tooltip" title="Eliminar zona">
+                              onsubmit="return confirm('¿Eliminar esta zona?')">
                             @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">
+                            <button class="btn btn-sm btn-danger" type="submit" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-danger" title="Eliminar">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
