@@ -76,6 +76,13 @@
             font-weight: 700 !important;
             color: #65686a !important;
         }
+        /* Highlight for matched terms in table filtering */
+        mark.table-filter-highlight {
+            background-color: #fff59d; /* pale yellow */
+            color: inherit;
+            padding: 0 .15rem;
+            border-radius: 2px;
+        }
         /* Tooltip variants for warning and danger */
         .tooltip-warning .tooltip-inner {
             background-color: var(--bs-warning) !important;
@@ -194,18 +201,131 @@
             return (text || '').toString().toLowerCase();
         }
 
+        function escapeRegExp(string) {
+            return String(string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function clearHighlights(el) {
+            if (!el) return;
+            const marks = Array.from(el.querySelectorAll('mark.table-filter-highlight'));
+            marks.forEach(m => {
+                const txt = document.createTextNode(m.textContent);
+                m.replaceWith(txt);
+            });
+        }
+
+        function highlightTextNode(textNode, regex) {
+            const text = textNode.nodeValue;
+            let lastIndex = 0;
+            const frag = document.createDocumentFragment();
+            regex.lastIndex = 0;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                    frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                }
+                const mark = document.createElement('mark');
+                mark.className = 'table-filter-highlight';
+                mark.textContent = match[0];
+                frag.appendChild(mark);
+                lastIndex = regex.lastIndex;
+            }
+            if (lastIndex < text.length) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+            textNode.replaceWith(frag);
+        }
+
+        function highlightElement(el, query) {
+            if (!query) return;
+            const regex = new RegExp(escapeRegExp(query), 'gi');
+
+            // Process runs of consecutive text nodes under the same parent to allow single <mark>
+            function processTextRun(parent, startIdx, endIdx) {
+                // Combine text from the range
+                const texts = [];
+                for (let k = startIdx; k <= endIdx; k++) texts.push(parent.childNodes[k].nodeValue || '');
+                const combined = texts.join('');
+
+                // Find matches in combined text
+                const matches = [];
+                let m;
+                while ((m = regex.exec(combined)) !== null) {
+                    matches.push({ start: m.index, end: m.index + m[0].length });
+                    if (m.index === regex.lastIndex) regex.lastIndex++;
+                }
+                if (!matches.length) return;
+
+                // Build fragment by iterating through combined string and inserting marks
+                const frag = document.createDocumentFragment();
+                let pos = 0;
+                matches.forEach(mm => {
+                    if (mm.start > pos) frag.appendChild(document.createTextNode(combined.slice(pos, mm.start)));
+                    // Extract raw matched substring and trim surrounding spaces
+                    const raw = combined.slice(mm.start, mm.end);
+                    const leadingMatch = raw.match(/^\s+/);
+                    const trailingMatch = raw.match(/\s+$/);
+                    const leading = leadingMatch ? leadingMatch[0] : '';
+                    const trailing = trailingMatch ? trailingMatch[0] : '';
+                    const core = raw.slice(leading.length, raw.length - trailing.length);
+                    if (leading) frag.appendChild(document.createTextNode(leading));
+                    const mark = document.createElement('mark');
+                    mark.className = 'table-filter-highlight';
+                    mark.textContent = core;
+                    frag.appendChild(mark);
+                    if (trailing) frag.appendChild(document.createTextNode(trailing));
+                    pos = mm.end;
+                });
+                if (pos < combined.length) frag.appendChild(document.createTextNode(combined.slice(pos)));
+
+                // Replace the original text nodes in parent with the fragment
+                // Remove nodes from startIdx to endIdx
+                for (let k = endIdx; k >= startIdx; k--) parent.removeChild(parent.childNodes[k]);
+                // Insert fragment at position startIdx (now childNodes[startIdx] is next node)
+                if (parent.childNodes.length > startIdx) parent.insertBefore(frag, parent.childNodes[startIdx]);
+                else parent.appendChild(frag);
+            }
+
+            // Recursive traversal: find runs of consecutive text nodes
+            function traverse(node) {
+                if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
+                const children = node.childNodes;
+                let i = 0;
+                while (i < children.length) {
+                    const child = children[i];
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        // start of a run
+                        let j = i;
+                        while (j + 1 < children.length && children[j + 1].nodeType === Node.TEXT_NODE) j++;
+                        // process run i..j
+                        processTextRun(node, i, j);
+                        // advance i to j+1 (note that childNodes changed after process)
+                        i = j + 1;
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        // recurse into element
+                        traverse(child);
+                        i++;
+                    } else {
+                        i++;
+                    }
+                }
+            }
+
+            traverse(el);
+        }
+
         function filterTable(input) {
             const selector = input.dataset.target || input.getAttribute('data-target');
             if (!selector) return;
             const table = document.querySelector(selector);
             if (!table) return;
-            const query = normalize(input.value).trim();
+            const queryRaw = input.value || '';
+            const query = normalize(queryRaw).trim();
             const tbody = table.querySelector('tbody');
             if (!tbody) return;
             const rows = Array.from(tbody.querySelectorAll('tr'));
 
             rows.forEach(row => {
-                // If the row has a single cell with colspan (empty state), treat normally
                 const cells = Array.from(row.querySelectorAll('td, th'));
                 let rowText = '';
                 for (const c of cells) {
@@ -213,6 +333,12 @@
                 }
                 const found = query === '' || normalize(rowText).indexOf(query) !== -1;
                 row.style.display = found ? '' : 'none';
+                // Clear previous highlights
+                cells.forEach(c => clearHighlights(c));
+                // If found and query present, highlight matches inside visible cells
+                if (found && query !== '') {
+                    cells.forEach(c => highlightElement(c, queryRaw));
+                }
             });
         }
 
@@ -223,7 +349,6 @@
                 if (input._filterAttached) return;
                 input._filterAttached = true;
                 input.addEventListener('input', (e) => {
-                    // debounce per input
                     const pending = debounces.get(input);
                     if (pending) clearTimeout(pending);
                     debounces.set(input, setTimeout(() => {
@@ -237,7 +362,6 @@
 
         attachFilters();
 
-        // If the page dynamically loads content (e.g., via Turbolinks or PJAX), re-run attachFilters
         // Observe DOM additions to attach filters to later-inserted tables/inputs
         const observer = new MutationObserver((mutations) => {
             for (const m of mutations) {
