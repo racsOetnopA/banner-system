@@ -108,9 +108,21 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        {!! $b->active
-                            ? '<span class="badge bg-success">Sí</span>'
-                            : '<span class="badge bg-danger">No</span>' !!}
+                        @php
+                            $active = $b->active ? 1 : 0;
+                        @endphp
+                        <span
+                            class="badge badge-toggle-active {{ $b->active ? 'bg-success' : 'bg-danger' }}"
+                            role="button"
+                            style="cursor: pointer;"
+                            data-active="{{ $active }}"
+                            data-url="{{ route('banners.toggle-active', $b) }}"
+                            data-bs-toggle="tooltip"
+                            data-bs-custom-class="{{ $b->active ? 'tooltip-success' : 'tooltip-danger' }}"
+                            title="{{ $b->active ? 'Inactivar' : 'Activar' }}"
+                        >
+                            {{ $b->active ? 'Sí' : 'No' }}
+                        </span>
                     </td>
                     <td class="text-center">
                         @if($b->start_date)
@@ -304,6 +316,48 @@
                             try { if (btn._tooltip) btn._tooltip.dispose(); } catch(e) {}
                             btn._tooltip = new bootstrap.Tooltip(btn, { delay: { show: 0, hide: 100 } });
                         }
+                    });
+                });
+
+                // Handle toggle active badges (AJAX)
+                document.querySelectorAll('.badge-toggle-active').forEach(bdg => {
+                    // ensure tooltip is initialized
+                    try { if (bdg._tooltip) bdg._tooltip.dispose(); } catch(e) {}
+                    bdg._tooltip = new bootstrap.Tooltip(bdg, { delay: { show: 0, hide: 100 } });
+
+                    bdg.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const url = bdg.getAttribute('data-url');
+                        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+                        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
+                        bdg.classList.add('opacity-75');
+                        bdg.classList.add('disabled');
+
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                        }).catch(() => null);
+
+                        bdg.classList.remove('opacity-75');
+                        bdg.classList.remove('disabled');
+                        if (!res) { alert('Error de red al cambiar estado'); return; }
+                        const data = await res.json().catch(() => null);
+                        if (!data || data.status !== 'ok') { alert(data?.message || 'Error al cambiar estado'); return; }
+
+                        const isActive = data.active === true;
+                        bdg.setAttribute('data-active', isActive ? '1' : '0');
+                        bdg.classList.toggle('bg-success', isActive);
+                        bdg.classList.toggle('bg-danger', !isActive);
+                        bdg.textContent = isActive ? 'Sí' : 'No';
+                        // update tooltip text
+                        try { if (bdg._tooltip) bdg._tooltip.dispose(); } catch(e) {}
+                        bdg.setAttribute('title', isActive ? 'Inactivar' : 'Activar');
+                        bdg._tooltip = new bootstrap.Tooltip(bdg, { delay: { show: 0, hide: 100 } });
                     });
                 });
             });

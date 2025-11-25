@@ -8,7 +8,7 @@
     <h1 class="h3 mb-0">
       <i class="fas fa-image me-2"></i> Editar Banner
     </h1>
-    <a href="{{ route('banners.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" title="Volver al listado">
+    <a href="{{ route('banners.index') }}" class="btn btn-secondary">
       <i class="fas fa-arrow-left me-1"></i> Volver
     </a>
   </div>

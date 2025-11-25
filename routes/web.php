@@ -30,6 +30,8 @@ Route::middleware(['web','auth'])->group(function() {
     Route::resource('banners', BannerController::class);
     // Toggle principal flag for a banner-zone association via AJAX
     Route::post('banners/{banner}/zones/{zone}/toggle-principal', [BannerController::class, 'togglePrincipal'])->name('banners.toggle-principal');
+    // Toggle a banner's active state via AJAX
+    Route::post('banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
     Route::resource('zones', ZoneController::class);
     Route::resource('assignments', AssignmentController::class)->parameters(['assignments' => 'assignment']);
     Route::resource('webs', WebController::class);

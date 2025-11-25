@@ -158,4 +158,20 @@ class BannerController extends Controller
 
         return response()->json(['status' => 'ok', 'principal' => $makePrincipal]);
     }
+
+    /**
+     * Toggle the banner active state via AJAX.
+     * Returns JSON with the new `active` value.
+     */
+    public function toggleActive(Request $request, Banner $banner)
+    {
+        $banner->active = ! (bool) $banner->active;
+        $banner->save();
+
+        return response()->json([
+            'status' => 'ok',
+            'active' => (bool) $banner->active,
+            'message' => $banner->active ? 'Banner activado.' : 'Banner inactivado.'
+        ]);
+    }
 }

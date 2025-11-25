@@ -155,6 +155,9 @@
                 <input type="text" id="zones_filter" class="form-control form-control"
                     placeholder="Buscar zona...">
             </div>
+            @error('zones')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
             <div id="zones_panel" class="shadow"
                 style="max-height:400px; min-height: 400px; overflow:auto; border:1px solid var(--bs-border-color, #e9ecef); padding:8px; border-radius:.375rem; background-color:var(--bs-body-bg, #fff);">
                 <div id="zones_list">
@@ -185,10 +188,6 @@
         </div>
     </div>
 </div>
-
-@error('zones')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
 
 {{-- Botones --}}
 <div class="col-12 mt-4">
