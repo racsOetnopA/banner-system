@@ -50,7 +50,10 @@
 
 <div class="card shadow-sm">
     <div class="card-body table-responsive">
-        <table class="table table-sm align-middle">
+        <div class="mb-3">
+            <input type="search" class="form-control table-filter" placeholder="Filtrar filas de la tabla..." aria-label="Filtrar banners" data-target="#banners-table">
+        </div>
+        <table id="banners-table" class="table table-sm align-middle">
             <thead class="table-light">
                 <tr>
                     <th>ID</th>

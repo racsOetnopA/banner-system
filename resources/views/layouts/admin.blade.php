@@ -185,6 +185,71 @@
     });
     </script>
 
+    <script>
+    // Global table filtering: any input with `.table-filter` will filter rows in the target table
+    document.addEventListener('DOMContentLoaded', () => {
+        const debounces = new WeakMap();
+
+        function normalize(text) {
+            return (text || '').toString().toLowerCase();
+        }
+
+        function filterTable(input) {
+            const selector = input.dataset.target || input.getAttribute('data-target');
+            if (!selector) return;
+            const table = document.querySelector(selector);
+            if (!table) return;
+            const query = normalize(input.value).trim();
+            const tbody = table.querySelector('tbody');
+            if (!tbody) return;
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.forEach(row => {
+                // If the row has a single cell with colspan (empty state), treat normally
+                const cells = Array.from(row.querySelectorAll('td, th'));
+                let rowText = '';
+                for (const c of cells) {
+                    rowText += ' ' + c.textContent;
+                }
+                const found = query === '' || normalize(rowText).indexOf(query) !== -1;
+                row.style.display = found ? '' : 'none';
+            });
+        }
+
+        // Attach listeners to all existing and future .table-filter inputs
+        function attachFilters(scope = document) {
+            const inputs = Array.from(scope.querySelectorAll('.table-filter'));
+            inputs.forEach(input => {
+                if (input._filterAttached) return;
+                input._filterAttached = true;
+                input.addEventListener('input', (e) => {
+                    // debounce per input
+                    const pending = debounces.get(input);
+                    if (pending) clearTimeout(pending);
+                    debounces.set(input, setTimeout(() => {
+                        filterTable(input);
+                    }, 150));
+                });
+                // trigger initial run in case input is pre-filled
+                setTimeout(() => filterTable(input), 0);
+            });
+        }
+
+        attachFilters();
+
+        // If the page dynamically loads content (e.g., via Turbolinks or PJAX), re-run attachFilters
+        // Observe DOM additions to attach filters to later-inserted tables/inputs
+        const observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.addedNodes && m.addedNodes.length) {
+                    attachFilters(m.target || document);
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

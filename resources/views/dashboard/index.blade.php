@@ -104,7 +104,10 @@
                                 <canvas id="chartZoneByWeb" height="120"></canvas>
                             </div>
                             <div class="col-12">
-                                <table class="table table-sm">
+                                <div class="mb-2">
+                                    <input type="search" class="form-control table-filter" placeholder="Filtrar filas de la tabla..." aria-label="Filtrar estadísticas por zona" data-target="#dashboard-zone-stats-table">
+                                </div>
+                                <table id="dashboard-zone-stats-table" class="table table-sm">
                                     <thead>
                                         <tr>
                                             <th>Zona</th>
