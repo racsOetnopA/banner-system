@@ -19,6 +19,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     {{-- 💡 Importante: esta línea inyecta el cliente de Vite --}}
+
     @vite([
         // 'resources/css/app.css',
         'resources/assets/css/styles.css',
