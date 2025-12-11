@@ -40,7 +40,7 @@
             <div class="text-center">
             <span>antes</span>
             <div id="zone-header"></div>
-            <script src="https://banner-system.test:8080/js/banner.js?zone=header&site=blog.com&interval=12000"></script>
+            <script src="https://banner-system.test:8080/js/banner.js?zone_id=123&interval=12000"></script>
             <span>despues</span>
             </div>
             {{-- zona banner --}}

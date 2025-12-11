@@ -44,16 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyBtn = document.getElementById('copy-code');
     const base = "{{ rtrim(config('app.url'), '/') }}";
 
-    function buildSnippet(zoneName, siteDomain) {
-        if (!zoneName || !siteDomain) return '';
-        return `<div id="zone-${zoneName}"></div>\n<script>\n(function(){\n  var s=document.createElement('script');\n  s.src='${base}/js/banner.js?zone=${zoneName}&site=${siteDomain}';\n  document.currentScript.parentNode.appendChild(s);\n})();\n<\/script>`;
+    function buildSnippet(zoneId) {
+        if (!zoneId) return '';
+        return `<div id="zone-${zoneId}"></div>\n<script>\n(function(){\n  var s=document.createElement('script');\n  s.src='${base}/js/banner.js?zone_id=${zoneId}';\n  document.currentScript.parentNode.appendChild(s);\n})();\n<\/script>`;
     }
 
     function update() {
         const opt = select.options[select.selectedIndex];
-        const zoneText = opt ? opt.text.split(' - ')[0].trim() : '';
-        const site = opt ? opt.dataset.site || '' : '';
-        embed.value = zoneText && site ? buildSnippet(zoneText, site) : '';
+        const zoneId = opt ? opt.value : '';
+        embed.value = zoneId ? buildSnippet(zoneId) : '';
     }
 
     copyBtn.addEventListener('click', () => {

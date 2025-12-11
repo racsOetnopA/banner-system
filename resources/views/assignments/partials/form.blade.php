@@ -107,13 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copy-code');
   const base = "{{ rtrim(config('app.url'), '/') }}"; // APP_URL base del servidor de banners
 
-  function buildSnippet(zoneName, siteDomain) {
-    if (!zoneName || !siteDomain) return '';
-    return `<div id="zone-${zoneName}"></div>
+  function buildSnippet(zoneId) {
+    if (!zoneId) return '';
+    return `<div id="zone-${zoneId}"></div>
 <script>
   (function(){
     var s=document.createElement('script');
-    s.src='${base}/js/banner.js?zone=${zoneName}&site=${siteDomain}';
+    s.src='${base}/js/banner.js?zone_id=${zoneId}';
     document.currentScript.parentNode.appendChild(s);
   })();
 <\/script>`;
@@ -121,9 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCode() {
     const opt = zoneSelect ? zoneSelect.options[zoneSelect.selectedIndex] : null;
-    const zoneName = opt ? (opt.dataset.zoneName || opt.text.split(' - ')[0].trim()) : '';
-    const siteDomain = siteInput?.value.trim();
-    embed.value = (zoneName && siteDomain) ? buildSnippet(zoneName, siteDomain) : '';
+    const zoneId = opt ? opt.value : '';
+    embed.value = zoneId ? buildSnippet(zoneId) : '';
   }
 
   // Copiar

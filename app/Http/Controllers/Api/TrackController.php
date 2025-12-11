@@ -18,6 +18,7 @@ class TrackController extends Controller
     {
         $assignmentId = $request->query('assignment');
         $zone = $request->query('zone');
+        $zoneId = $request->query('zone_id');
         $site = $request->query('site');
 
         $assignment = $assignmentId ? Assignment::find($assignmentId) : null;
@@ -25,7 +26,7 @@ class TrackController extends Controller
         BannerView::create([
             'banner_id'     => $id,
             'assignment_id' => $assignment ? $assignment->id : null,
-            'zone_id'       => $assignment ? $assignment->zone_id : null,
+            'zone_id'       => $assignment ? $assignment->zone_id : ($zoneId ?: null),
             'site_domain'   => $site,
             'ip'            => $request->ip(),
             'user_agent'    => $request->userAgent(),
@@ -42,6 +43,7 @@ class TrackController extends Controller
     {
         $assignmentId = $request->query('assignment');
         $zone = $request->query('zone');
+        $zoneId = $request->query('zone_id');
         $site = $request->query('site');
         $redirect = $request->query('redirect');
 
@@ -50,7 +52,7 @@ class TrackController extends Controller
         BannerClick::create([
             'banner_id'     => $id,
             'assignment_id' => $assignment ? $assignment->id : null,
-            'zone_id'       => $assignment ? $assignment->zone_id : null,
+            'zone_id'       => $assignment ? $assignment->zone_id : ($zoneId ?: null),
             'site_domain'   => $site,
             'ip'            => $request->ip(),
             'user_agent'    => $request->userAgent(),

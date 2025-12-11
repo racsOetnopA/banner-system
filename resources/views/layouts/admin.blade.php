@@ -165,7 +165,7 @@
         <script>
         (function(){
         var s=document.createElement('script');
-        s.src='http://banner-system.test/js/banner.js?zone=10x10&site=banner-system.test';
+        s.src='http://banner-system.test/js/banner.js?zone_id=10';
         document.currentScript.parentNode.appendChild(s);
         })();
         </script>

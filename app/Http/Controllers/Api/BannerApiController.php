@@ -13,16 +13,26 @@ class BannerApiController extends Controller
 {
     public function show(Request $request)
     {
+        $zoneId = $request->get('zone_id');
         $zoneName = $request->get('zone');
         $siteDomain = $request->get('site');
 
-        if (!$zoneName || !$siteDomain) {
-            return response()->json(['error' => 'zone and site parameters required'], 400);
+        // Buscar la zona por id (preferido) o por nombre (compatibilidad)
+        if ($zoneId) {
+            $zone = Zone::find($zoneId);
+        } elseif ($zoneName) {
+            $zone = Zone::where('name', $zoneName)->first();
+        } else {
+            return response()->json(['error' => 'zone_id or zone parameter required'], 400);
         }
 
-        $zone = Zone::where('name', $zoneName)->first();
         if (!$zone) {
             return response()->json(['error' => 'Zone not found'], 404);
+        }
+
+        // Si no llega el dominio, usar el dominio asociado a la zona (web)
+        if (!$siteDomain) {
+            $siteDomain = optional($zone->web)->site_domain;
         }
 
         // Obtener banners desde la zona (método centralizado)
@@ -40,9 +50,10 @@ class BannerApiController extends Controller
         $session = session();
         $sessionId = $session->getId() ?? request()->ip();
 
-        $orderKey = "banner_rotation.order.{$siteDomain}.{$zone->id}";
-        $indexKey = "banner_rotation.index.{$siteDomain}.{$zone->id}";
-        $firstServedKey = "banner_rotation.first_served.{$siteDomain}.{$zone->id}";
+        $siteKey = $siteDomain ?: 'no-site';
+        $orderKey = "banner_rotation.order.{$siteKey}.{$zone->id}";
+        $indexKey = "banner_rotation.index.{$siteKey}.{$zone->id}";
+        $firstServedKey = "banner_rotation.first_served.{$siteKey}.{$zone->id}";
 
         // Build deterministic per-session order for non-principal banners if missing
         if (! $session->has($orderKey)) {
@@ -93,7 +104,7 @@ class BannerApiController extends Controller
         }
 
         // 💡 Generar HTML con tracking contextual
-        $html = $this->generateBannerHtml($banner, null, $zoneName, $siteDomain);
+        $html = $this->generateBannerHtml($banner, null, $zoneName ?? $zone->name, $siteDomain);
 
         // Determinar si el banner ya realiza su propio tracking de vista.
         $viewTracked = false;
@@ -129,7 +140,10 @@ class BannerApiController extends Controller
         if (!empty($banner->link_url)) {
             $paramsArr['redirect'] = $banner->link_url;
         }
-        $params = http_build_query($paramsArr);
+        // Eliminar nulos/vacíos para no enviar pares vacíos en la URL
+        $params = http_build_query(array_filter($paramsArr, function ($v) {
+            return !is_null($v) && $v !== '';
+        }));
 
         // === Tipo Imagen ===
         if ($banner->type === 'image') {
@@ -137,7 +151,7 @@ class BannerApiController extends Controller
 
             // Si no hay enlace destino, no envolver en <a> (no se permite acción al click)
             if (!empty($banner->link_url)) {
-                $clickUrl = "{$baseUrl}/api/track/click/{$banner->id}?{$params}";
+                $clickUrl = "{$baseUrl}/api/track/click/{$banner->id}" . ($params ? "?{$params}" : '');
                 $imgHtml = "<a href='{$clickUrl}' target='_blank'>
                     <img src='{$imgSrc}' style='width:100%;height:auto;transition:transform .3s ease-in-out;' onmouseover=\"this.style.transform='scale(1.05)'\" onmouseout=\"this.style.transform='scale(1)'\">
                 </a>";
@@ -160,7 +174,7 @@ class BannerApiController extends Controller
 
             // Solo añadir overlay clicable si existe enlace destino
             if (!empty($banner->link_url)) {
-                $clickUrl = "{$baseUrl}/api/track/click/{$banner->id}?{$params}";
+                $clickUrl = "{$baseUrl}/api/track/click/{$banner->id}" . ($params ? "?{$params}" : '');
                 $videoBlock .= "<a href='{$clickUrl}' target='_blank' style='position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;'></a>";
             }
 
