@@ -5,6 +5,7 @@
 .env.backup
 .phpactor.json
 .phpunit.result.cache
+.htaccess
 /.fleet
 /.idea
 /.nova

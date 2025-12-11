@@ -13,7 +13,7 @@
             @endif
 
             <div class="mb-3">
-                <label for="site_domain" class="form-label">Dominio (site_domain)</label>
+                <label for="site_domain" class="form-label">Dominio</label>
                 <input type="text" name="site_domain" id="site_domain" class="form-control" value="{{ old('site_domain', optional($web)->site_domain) }}" required>
                 @error('site_domain') <div class="text-danger small">{{ $message }}</div> @enderror
             </div>
